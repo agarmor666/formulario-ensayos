@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscripcion de Ensayos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .schedule-table {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            font-size: 13px;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        
+        td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .slot {
+            background: #e8f5e9;
+            padding: 8px;
+            border-radius: 5px;
+            margin: 3px 0;
+            font-size: 12px;
+        }
+        
+        .slot.salon {
+            background: #e3f2fd;
+        }
+        
+        .slot.porche {
+            background: #fff3e0;
+        }
+        
+        .slot.pabellon {
+            background: #f3e5f5;
+        }
+        
+        .empty-slot {
+            color: #999;
+            font-style: italic;
+            font-size: 11px;
+        }
+        
+        .slot-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .delete-btn {
+            background: #ef5350;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+        
+        .delete-btn:hover {
+            background: #d32f2f;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .refresh-btn {
+            background: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        .refresh-btn:hover {
+            background: #45a049;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+            
+            table {
+                font-size: 11px;
+            }
+            
+            th, td {
+                padding: 6px 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Inscripcion de Ensayos</h1>
+            <p>Semana del 15 al 18 de Diciembre 2025</p>
+            <p>Horario: 9:00 - 14:00 hrs (Tramos de 30 minutos)</p>
+        </div>
+        
+        <div class="content">
+            <div class="form-section">
+                <h2 style="margin-bottom: 20px; color: #667eea;">Registrar Ensayo</h2>
+                <form id="rehearsalForm">
+                    <div class="form-group">
+                        <label for="teacherName">Nombre del Maestro/a</label>
+                        <input type="text" id="teacherName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="group">Grupo</label>
+                        <input type="text" id="group" placeholder="Ej: 3A, 5B" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="day">Dia</label>
+                        <select id="day" required>
+                            <option value="">Seleccionar dia</option>
+                            <option value="Lunes 15">Lunes 15 de Diciembre</option>
+                            <option value="Martes 16">Martes 16 de Diciembre</option>
+                            <option value="Miercoles 17">Miercoles 17 de Diciembre</option>
+                            <option value="Jueves 18">Jueves 18 de Diciembre</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="time">Hora de Ensayo (30 minutos)</label>
+                        <select id="time" required>
+                            <option value="">Seleccionar hora</option>
+                            <option value="9:00 - 9:30">9:00 - 9:30</option>
+                            <option value="9:30 - 10:00">9:30 - 10:00</option>
+                            <option value="10:00 - 10:30">10:00 - 10:30</option>
+                            <option value="10:30 - 11:00">10:30 - 11:00</option>
+                            <option value="11:00 - 11:30">11:00 - 11:30</option>
+                            <option value="11:30 - 12:00">11:30 - 12:00</option>
+                            <option value="12:00 - 12:30">12:00 - 12:30</option>
+                            <option value="12:30 - 13:00">12:30 - 13:00</option>
+                            <option value="13:00 - 13:30">13:00 - 13:30</option>
+                            <option value="13:30 - 14:00">13:30 - 14:00</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="place">Lugar</label>
+                        <select id="place" required>
+                            <option value="">Seleccionar lugar</option>
+                            <option value="Salon de Usos Multiples">Salon de Usos Multiples</option>
+                            <option value="Porche Trasero">Porche Trasero</option>
+                            <option value="Pabellon Municipal">Pabellon Municipal</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn" id="submitBtn">Registrar Ensayo</button>
+                </form>
+            </div>
+            
+            <div id="loadingMessage" class="loading" style="display: none;">Cargando horarios...</div>
+            
+            <div class="schedule-table">
+                <button class="refresh-btn" onclick="loadSchedule()">Actualizar Horarios</button>
+                <h2 style="margin-bottom: 20px; color: #667eea;">Horarios Registrados</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 100px;">Dia</th>
+                            <th>9:00-9:30</th>
+                            <th>9:30-10:00</th>
+                            <th>10:00-10:30</th>
+                            <th>10:30-11:00</th>
+                            <th>11:00-11:30</th>
+                            <th>11:30-12:00</th>
+                            <th>12:00-12:30</th>
+                            <th>12:30-13:00</th>
+                            <th>13:00-13:30</th>
+                            <th>13:30-14:00</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scheduleBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyf_RW_F6DmyrEDmhzf6t-aF-tKBWkzr9EjUuCUf7-HI5XJRygpJgfUlFV7vEsA_KlBQg/exec';
+        
+        const days = ['Lunes 15', 'Martes 16', 'Miercoles 17', 'Jueves 18'];
+        const times = [
+            '9:00 - 9:30', '9:30 - 10:00', '10:00 - 10:30', '10:30 - 11:00',
+            '11:00 - 11:30', '11:30 - 12:00', '12:00 - 12:30', '12:30 - 13:00',
+            '13:00 - 13:30', '13:30 - 14:00'
+        ];
+        const places = ['Salon de Usos Multiples', 'Porche Trasero', 'Pabellon Municipal'];
+        
+        let schedule = {};
+
+        async function loadSchedule() {
+            try {
+                document.getElementById('loadingMessage').style.display = 'block';
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action: 'get' })
+                });
+                
+                // Con no-cors no podemos leer la respuesta, así que hacemos un GET
+                const getResponse = await fetch(API_URL + '?action=get&t=' + new Date().getTime());
+                const result = await getResponse.json();
+                
+                if (result.success && result.data) {
+                    schedule = result.data;
+                } else {
+                    initSchedule();
+                }
+                
+                renderSchedule();
+            } catch (error) {
+                console.error('Error cargando:', error);
+                initSchedule();
+                renderSchedule();
+            } finally {
+                document.getElementById('loadingMessage').style.display = 'none';
+            }
+        }
+        
+        function initSchedule() {
+            schedule = {};
+            days.forEach(day => {
+                schedule[day] = {};
+                times.forEach(time => {
+                    schedule[day][time] = {};
+                    places.forEach(place => {
+                        schedule[day][time][place] = null;
+                    });
+                });
+            });
+        }
+        
+        async function saveReservation(day, time, place, teacher, group) {
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'set',
+                        day: day,
+                        time: time,
+                        place: place,
+                        teacher: teacher,
+                        group: group
+                    })
+                });
+                
+                return true;
+            } catch (error) {
+                console.error('Error guardando:', error);
+                return false;
+            }
+        }
+        
+        async function deleteReservation(day, time, place) {
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'delete',
+                        day: day,
+                        time: time,
+                        place: place
+                    })
+                });
+                
+                return true;
+            } catch (error) {
+                console.error('Error eliminando:', error);
+                return false;
+            }
+        }
+        
+        function renderSchedule() {
+            const tbody = document.getElementById('scheduleBody');
+            tbody.innerHTML = '';
+            
+            days.forEach(day => {
+                const row = document.createElement('tr');
+                const dayCell = document.createElement('td');
+                dayCell.innerHTML = `<strong>${day}</strong>`;
+                row.appendChild(dayCell);
+                
+                times.forEach(time => {
+                    const cell = document.createElement('td');
+                    const slots = [];
+                    
+                    places.forEach(place => {
+                        const entry = schedule[day] && schedule[day][time] && schedule[day][time][place];
+                        if (entry) {
+                            const slotDiv = document.createElement('div');
+                            let className = 'slot salon';
+                            if (place === 'Porche Trasero') className = 'slot porche';
+                            if (place === 'Pabellon Municipal') className = 'slot pabellon';
+                            slotDiv.className = className;
+                            
+                            slotDiv.innerHTML = `
+                                <div class="slot-info">
+                                    <div>
+                                        <strong>${entry.teacher}</strong><br>
+                                        ${entry.group}<br>
+                                        <small>${place.substring(0, 12)}...</small>
+                                    </div>
+                                    <button class="delete-btn" onclick="deleteEntry('${day}', '${time}', '${place}')">X</button>
+                                </div>
+                            `;
+                            slots.push(slotDiv);
+                        }
+                    });
+                    
+                    if (slots.length === 0) {
+                        cell.innerHTML = '<span class="empty-slot">Disponible</span>';
+                    } else {
+                        slots.forEach(slot => cell.appendChild(slot));
+                    }
+                    
+                    row.appendChild(cell);
+                });
+                
+                tbody.appendChild(row);
+            });
+        }
+        
+        async function deleteEntry(day, time, place) {
+            if (confirm('Seguro que deseas eliminar este ensayo?')) {
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Eliminando...';
+                
+                await deleteReservation(day, time, place);
+                
+                setTimeout(async () => {
+                    await loadSchedule();
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Registrar Ensayo';
+                }, 2000);
+            }
+        }
+        
+        document.getElementById('rehearsalForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Guardando...';
+            
+            const teacher = document.getElementById('teacherName').value;
+            const group = document.getElementById('group').value;
+            const day = document.getElementById('day').value;
+            const time = document.getElementById('time').value;
+            const place = document.getElementById('place').value;
+            
+            if (schedule[day] && schedule[day][time] && schedule[day][time][place]) {
+                alert('Este horario y lugar ya esta ocupado. Por favor selecciona otro.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Registrar Ensayo';
+                return;
+            }
+            
+            const success = await saveReservation(day, time, place, teacher, group);
+            
+            if (success) {
+                this.reset();
+                alert('Ensayo registrado exitosamente! Actualizando en 2 segundos...');
+                
+                setTimeout(async () => {
+                    await loadSchedule();
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Registrar Ensayo';
+                }, 2000);
+            } else {
+                alert('Error al guardar. Por favor intenta de nuevo.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Registrar Ensayo';
+            }
+        });
+        
+        loadSchedule();
+    </script>
+</body>
+</html>
